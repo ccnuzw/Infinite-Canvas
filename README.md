@@ -1,87 +1,93 @@
-# Infinite-Canvas
-Supports comfyui/API calls/modelscope calls
+# Infinite Canvas
 
-2026/08/28:
+Infinite Canvas 是一个自托管的 AI 图像、视频和文本创作工作台。它以本地 Web 应用的形式运行，把多种模型接口、无限画布、ComfyUI 工作流和素材管理集中在一个界面中。
 
-此项目已停更，全新版本请前往：www.DX-OS.com 下载。
+## 核心功能
 
-功能特性：
-1. 画布功能全新升级，支持Agent/一键分层/多人协同/共享画布/免费公网图床
-2. 软件内即可启动ComfyUI/映射工作流等
-3. 海量免费APP可下载
-4. 全新的账号管理/APP权限系统
-5. 提供开发者模式，可以开发自己公司的业务软件离线运行
+- 无限画布与智能画布：管理提示词、图片、视频、音频、LLM 和生成节点。
+- 多平台接入：支持 OpenAI 兼容接口、Gemini、ModelScope、RunningHub、火山方舟、即梦 CLI 等。
+- ComfyUI 工作流：连接本地或局域网 ComfyUI，导入 API 格式工作流并配置可调参数。
+- 图片与视频创作：文生图、图生图、图片编辑、视频生成、增强、裁剪、遮罩和宫格切分。
+- 素材管理：管理图片、视频、音频、提示词、工作流和画布资产。
+- 工作流导入导出：支持 JSON 工作流，以及包含资源的 ZIP 工作流包。
 
------
+## 快速开始
 
+### Windows
 
-配套的chrome采集插件已经上线：https://chromewebstore.google.com/detail/infinite-canvas-%E5%9B%BE%E5%83%8F%E8%A7%86%E9%A2%91%E6%96%87%E5%AD%97%E6%8A%93%E5%8F%96%E5%B7%A5/ajfhnbklbmpfaaookhfakohabnpmlcic?authuser=0&hl=en
+需要 Python 3.10 或更高版本。项目目录中如果包含便携版 Python，启动脚本会优先使用它。
 
-详细教程：[https://youtu.be/1y9ShTvgC_w](https://youtu.be/r_y_9ALr7fg)
+```bat
+安装依赖.bat
+run.bat
+```
 
-由于最近很多API网址关停，我找到一个稳定的网址：
+也可以手动启动：
 
-https://apib.ai/register?aff=1uyAbb （包含所有生图模型/视频模型/LLM模型）
+```bat
+python main.py
+```
 
-https://www.fhl.mom/register?aff=86L574B4T2N9  （包含codex和GPT image 2模型）
+### macOS / Linux
 
-功能请求/功能更新/视频教程/联系我，都可以在B站评论或私信：https://space.bilibili.com/78652351
+```bash
+python3 --version
+python3 -m pip install -r requirements.txt
+python3 main.py
+```
 
+macOS 也可以使用项目内的脚本：
 
-----
+```bash
+./mac-安装依赖.sh
+./mac-启动服务.sh
+```
 
-【新增了version文件，我每次更新都会更新version的版本号，如果你下载version文件，打开项目后，导航栏的GitHub按键就会提示新版本，如果不想查看更新提示，就删除version文件】
+启动后访问：
 
-【A version file has been added. I update the version number with each update. If you download the version file, the GitHub button in the navigation bar will indicate the new version after opening the project. If you don't want to see update notifications, delete the version file.】
+```text
+http://127.0.0.1:3000/
+```
 
-----
+服务监听 `0.0.0.0:3000`，需要局域网或 VPS 访问时，可以使用服务器地址和端口访问。生产环境建议通过反向代理、HTTPS 和访问控制保护服务。
 
-支持的功能：
-1. 支持几乎所有OpenAI协议的API/异步协议/Gemini协议/方舟协议
-2. RunningHub的工作流/AI应用/收费模型调用
-3. 火山引擎调用（人脸认证还在修复bug）
-4. Modelscope免费LLM模型和图像模型调用
-5. 即梦CLI调用，可直接调用即梦高级会员的积分，支持文生图/图生图/文生视频/图生视频
-6. 支持调用本地局域网的ComfyUI
-7. 扩展图片/360全景图预览截图/视频帧抽取/循环节点等诸多功能
-8. tools文件夹中，增加了chrome批量采集到素材库的插件，PS直连画布调用所有功能的插件
+## 基本配置
 
---------
+1. 打开首页左侧的「API 设置」。
+2. 新增或选择一个平台，填写 Base URL、协议和 API Key。
+3. 验证连接并拉取模型列表。
+4. 保存后，在画布或其他功能页面选择对应的平台和模型。
 
-已经申请著作权，禁止商业用途
+使用 ComfyUI 时：
 
-Commercial use is prohibited.
+1. 确保 ComfyUI 已启动，默认地址为 `127.0.0.1:8188`。
+2. 打开「工作流设置」。
+3. 导入 ComfyUI 的 API 格式 JSON 工作流。
+4. 配置需要暴露到画布的输入参数。
 
+## 数据与安全
 
-* 可以自己使用和公司使用，禁止用于任何形式的修改封装成商业产品，商用须取得授权。
+项目运行时会在本地生成配置和用户数据，包括：
 
-* 根据代码二次开发的软件必须保持开源并注明来源作者
+- `data/`：API 平台配置、画布、素材索引、提示词库等。
+- `API/.env`：部分平台的密钥和环境配置。
+- `assets/`、`output/`：上传素材和生成结果。
+- `global_config.json`：部分全局配置。
 
-* This software is for personal and company use only, but is prohibited from being modified or packaged into commercial products in any way. Commercial use requires authorization.
+这些目录和文件包含个人数据或 API Key，不要提交到公开仓库，也不要直接把同一个服务实例暴露给不可信用户。当前项目没有内置多用户权限隔离；多人访问同一个实例时，平台配置、文件和部分运行状态可能共享。
 
-* Software developed based on this code must remain open source and the original author must be credited.
+## 项目结构
 
---------
+```text
+main.py                  FastAPI 服务入口
+static/                  Web 前端页面、脚本和样式
+workflows/               内置 ComfyUI 工作流
+tools/                   辅助工具和浏览器插件
+requirements.txt         Python 依赖
+新手运行与使用教程.md    使用说明
+MAC-使用说明.md          macOS 说明
+```
 
+## 许可证
 
-<img width="2079" height="665" alt="image" src="https://github.com/user-attachments/assets/8469923b-f7a2-403c-9c37-e6e789211f28" />
-
-<img width="1865" height="1503" alt="image" src="https://github.com/user-attachments/assets/f4030201-67c6-4845-b08b-b6fdf304afaa" />
-
-
-<img width="1696" height="1350" alt="b68e144c5b04a322bfd035da4d89aba3" src="https://github.com/user-attachments/assets/0a6090fb-a8dd-4c3d-adee-b1f9233a2d91" />
-
-   
-<img width="1525" height="1473" alt="image" src="https://github.com/user-attachments/assets/6f61fcf9-746c-425b-9e36-cfc8d252da7c" />
-
-   <img width="1261" height="864" alt="image" src="https://github.com/user-attachments/assets/57f3e230-3134-488f-8179-d97e7d15383a" />
-<img width="1530" height="858" alt="image" src="https://github.com/user-attachments/assets/9990e42d-22d5-4a10-a1e1-ad35a634edd2" />
-
-<img width="1735" height="1400" alt="image" src="https://github.com/user-attachments/assets/d8328ff8-bbe0-4f1c-9ffa-7b56e8a1a51d" />
-<img width="2258" height="969" alt="image" src="https://github.com/user-attachments/assets/4a752d99-885d-4ba9-8b86-91b495786b5c" />
-
-
-<img width="1531" height="1374" alt="image" src="https://github.com/user-attachments/assets/0af79e38-0955-4740-9e65-5c9bb057f58c" />
-
-<img width="2196" height="1040" alt="image" src="https://github.com/user-attachments/assets/6d823668-cde2-4836-8332-1858efe5f520" />
-<img width="2214" height="771" alt="image" src="https://github.com/user-attachments/assets/52e10958-753f-45ba-a50e-3bbec27be436" />
+许可证和使用条件请查看项目根目录的 [LICENSE](LICENSE) 文件。
